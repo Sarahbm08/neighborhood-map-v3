@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 class ListView extends Component {
-	state = {
-		query: ''
-	}
-
-	updateQuery(newValue) {
-		this.setState({ query: newValue });
-	}
-
+	
 	render() {
 		return (
 			<div className='list-view'>
@@ -19,8 +12,7 @@ class ListView extends Component {
 					type='text'
 					placeholder='Filter places below'
 					name='filter'
-					onChange={e => this.updateQuery(e.target.value)}
-					value={this.state.query}
+					onChange={e => this.props.updateQuery(e.target.value)}
 				/>
 
 				<ul>

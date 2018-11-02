@@ -9,10 +9,6 @@ class GoogleMap extends Component {
 		currentMarker: null,
 		currentMarkerProps: null,
 		infoWindowVisible: false
-	};
-
-	componentDidMount() {
-
 	}
 
 	mapIsReady = (props, map) => {
@@ -20,10 +16,19 @@ class GoogleMap extends Component {
 		this.updateMarkers(this.props.myPlaces);
 	}
 
+	componentDidUpdate(prevProps) {
+		// our places have changed, so we need to update the markers
+		if (this.props.myPlaces.length !== prevProps.myPlaces.length) {
+			this.updateMarkers(this.props.myPlaces);
+		}
+	}
+
 	updateMarkers(myPlaces) {
 		//if there are no places to show, then we're done
 		if(!myPlaces)
 			return;
+
+		this.removeAllMarkers();
 
 		let markerProps = [];
 		let markers = myPlaces.map( (place, index) => {
@@ -48,6 +53,10 @@ class GoogleMap extends Component {
 		});
 
 		this.setState({markers, markerProps});
+	}
+
+	removeAllMarkers() {
+		this.state.markers.forEach( (marker) => marker.setMap(null));
 	}
 
 	closeInfoWindow = () => {
@@ -90,9 +99,11 @@ class GoogleMap extends Component {
 					visible={this.state.infoWindowVisible}>
 
 					<div>
-						<h3>{this.state.currentMarkerProps && 
+						<h3>
+							{this.state.currentMarkerProps && 
 							this.state.currentMarkerProps.name + ' in ' + 
-							this.state.currentMarkerProps.city}</h3>
+							this.state.currentMarkerProps.city}
+						</h3>
 					</div>
 
 				</InfoWindow>
