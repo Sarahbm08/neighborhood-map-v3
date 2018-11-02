@@ -1,0 +1,58 @@
+[
+	{
+		"name": "Great Scotts Eatery",
+		"street": "7510 US-287",
+		"city": "Broomfield",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9150913, "lng": -105.0828829}
+	},
+	{
+		"name": "Chipper's Lanes",
+		"street": "100 Nickel St",
+		"city": "Broomfield",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.918739, "lng": -105.0876176}
+	},
+	{
+		"name": "Little Caesars Pizza",
+		"street": "1700 W Midway Blvd",
+		"city": "Broomfield",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9217969, "lng": -105.0891248}
+	},
+	{
+		"name": "IHOP Restaurant",
+		"street": "4730 W 120th Ave",
+		"city": "Westminster",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9134974, "lng": -105.0474766}
+	},
+	{
+		"name": "Kohl's",
+		"street": "11875 Sheridan Boulevard",
+		"city": "Westminster",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9122195, "lng": -105.0544629}
+	},
+	{
+		"name": "Themescape",
+		"street": "6811 W 120th Ave ste b-1",
+		"city": "Broomfield",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9153647, "lng": -105.0722849}
+	},
+	{
+		"name": "3 Margaritas",
+		"street": "2827, 6896 W 120th Ave",
+		"city": "Broomfield",
+		"state": "CO",
+		"zip": "80020",
+		"pos": {"lat": 39.9139525, "lng": -105.0725008}
+	}
+]
