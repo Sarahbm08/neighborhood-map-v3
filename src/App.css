@@ -5,45 +5,37 @@
   font-size: 40px;
 }
 
-.map {
-  height: 100vh;
-  width: 100%;
-  bottom: 0px;
-  left: 300px;
-  right: 0px;
-  position: absolute;
+.menu {
+  margin-left: 10px;
+  float: left;
 }
 
-/*.container {
+h1 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.map {
   height: 100%;
+  width: 100%;
   position: relative;
 }
 
-#map {
-  height: 100vh;
-  width: 100%;
-  bottom: 0px;
-  left: 300px;
-  right: 0px;
-  position: absolute;
-}*/
-
 .list-view {
-  height: 100vh;
+  height: 100%;
   width: 300px;
+  position: absolute;
   background-color: white;
+  z-index: 3;
 }
 
-.list-title {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  text-transform: uppercase;
-  color: black;
-  background-color: #9effab;
-  border: 2px solid black;
-  padding: 10px;
-}
+/*
+@media screen (min-width: 600px) {
+  .list-view {
+    position: relative;
+    transform: translate(0, 0);
+  }
+}*/
 
 .list-view ul {
   list-style: none;

@@ -13,21 +13,22 @@ class App extends Component {
   }
 
   toggleList = () => {
+    //if(this.state.showList)
+
     this.setState({showList: !this.state.showList});
   }
 
   render() {
     return (
       <div>
-        <button 
-          className="entypo-menu"
-          onClick={this.toggleList}
-        >
-        </button>
+        <header>
+          <button className="menu" onClick={this.toggleList}>
+            <span className="entypo-menu"></span>
+          </button>
+          <h1>Sarah's Places</h1>
+        </header>       
 
-        {this.state.showList && <ListView
-          myPlaces={this.state.all}>
-        </ListView>}
+        {this.state.showList && <ListView myPlaces={this.state.all}/>}
       
         <GoogleMap
           center={this.state.center}

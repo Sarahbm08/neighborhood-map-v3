@@ -13,7 +13,6 @@ class ListView extends Component {
 	render() {
 		return (
 			<div className='list-view'>
-				<div className='list-title'>Sarah's Places</div>
 
 				<input
 					className='filter-input'
@@ -25,8 +24,11 @@ class ListView extends Component {
 				/>
 
 				<ul>
-					{this.props.myPlaces.map( (place) => (
-						<li><button>{place.name}</button></li>
+					{this.props.myPlaces && 
+					this.props.myPlaces.map( (place, index) => (
+						<li key={index}>
+							<button>{place.name}</button>
+						</li>
 					))}
 				</ul>
 
