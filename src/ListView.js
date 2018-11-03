@@ -19,7 +19,9 @@ class ListView extends Component {
 					{this.props.myPlaces && 
 					this.props.myPlaces.map( (place, index) => (
 						<li key={index}>
-							<button>{place.name}</button>
+							<button onClick={this.props.clickListItem}>
+								{place.name}
+							</button>
 						</li>
 					))}
 				</ul>

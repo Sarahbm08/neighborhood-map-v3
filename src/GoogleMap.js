@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {Map, InfoWindow, GoogleApiWrapper} from 'google-maps-react';
 
+const CLIENT_ID = 'YQMUGUSOPVQ00HNH1O4TWU4PUQYF3WSASXHNUHO25KQDOFSC';
+const CLIENT_SECRET = 'DBMGJPUFAHPPDJC4KQKYCFT32ZHOZ4K2DVNOM3ZNIH4MH13P';
+const VERSION = '20180323';
+
 class GoogleMap extends Component {
 	state = {
 		map: null,
@@ -21,6 +25,12 @@ class GoogleMap extends Component {
 		if (this.props.myPlaces.length !== prevProps.myPlaces.length) {
 			this.updateMarkers(this.props.myPlaces);
 		}
+
+		if(this.props.currentMarkerIndex !== prevProps.currentMarkerIndex) {
+			this.setState({ currentMarker: this.state.markers[this.props.currentMarkerIndex],
+							currentMarkerProps: this.state.markerProps[this.props.currentMarkerIndex]
+							});
+		}
 	}
 
 	updateMarkers(myPlaces) {
@@ -40,8 +50,7 @@ class GoogleMap extends Component {
 			let props = {
 				key: index,
 				name: place.name,
-				pos: place.pos,
-				city: place.city
+				pos: place.pos				
 			};
 			markerProps.push(props);
 
@@ -68,12 +77,66 @@ class GoogleMap extends Component {
 	onMarkerClick(props, marker, e) {
 		this.closeInfoWindow();
 
-		this.setState({ currentMarker: marker,
-						currentMarkerProps: props,
+		let newProps = props;
+		this.getPlaceInfo(props.pos)
+			.then(placeInfo => {
+				if(placeInfo) {
+					newProps = {
+						...props,
+						fourSquareInfo: placeInfo
+					};
+				}
+				
+				this.setState({ currentMarker: marker,
+						currentMarkerProps: newProps,
 						infoWindowVisible: true});
+			});	
+	}
+
+	getPlaceInfo(pos) {
+		let venueID = '';
+		let lat = pos.lat, lng = pos.lng;		
+
+		return fetch(`https://api.foursquare.com/v2/venues/search?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}&ll=${lat},${lng}`)
+		    .then(data => data.json())
+		    .then(data => {
+		    	venueID = data.response.venues[0].id;
+		    	return this.getPlaceTip(venueID);
+		    })
+		    .catch(function(e) {
+		        console.log("Four square error! " + e);
+		        return null;
+		    });	    
+	}
+
+	getPlaceTip = (venueID) => {
+		return fetch(`https://api.foursquare.com/v2/venues/${venueID}/tips?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
+		    .then(data => data.json())
+		    .then(data => {
+		    	return data.response.tips.items[0];
+		    })
+		    .catch(function(e) {
+		    	console.log("Tips error! " + e);
+		    	return null;
+		    });
+	}
+
+	getFourSquareHTML() {
+		let displayHTML = '';
+		let fourSquareInfo = this.state.currentMarkerProps.fourSquareInfo;
+		
+		// the current marker has four square info
+		if(fourSquareInfo) {
+			displayHTML = `<p>${fourSquareInfo.text}</p>
+						<p>Tips provided by FourSquare</p>`;
+		}
+
+		return displayHTML;
 	}
 
 	render() {
+		const currentProps = this.state.currentMarkerProps;
+
 		return (
 			<Map
 				role="application"
@@ -100,10 +163,17 @@ class GoogleMap extends Component {
 
 					<div>
 						<h3>
-							{this.state.currentMarkerProps && 
-							this.state.currentMarkerProps.name + ' in ' + 
-							this.state.currentMarkerProps.city}
+							{currentProps && 
+							currentProps.name}
 						</h3>
+						{/*If there is no four square data available, then nothing is displayed */}
+						{currentProps && currentProps.fourSquareInfo &&
+							<div className="tips">
+								<p>{currentProps.fourSquareInfo.text}</p>
+								<p><a href={currentProps.fourSquareInfo.canonicalUrl}>See more info</a></p>
+								<p>Tips provided by FourSquare</p>
+							</div>
+						}
 					</div>
 
 				</InfoWindow>

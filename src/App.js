@@ -10,7 +10,8 @@ class App extends Component {
     zoom: 14,
     all: myPlaces,
     filtered: myPlaces,
-    showList: false
+    showList: false,
+    currentMarkerIndex: -1
   }
 
   toggleList = () => {
@@ -23,6 +24,13 @@ class App extends Component {
 
   filterPlaces = (myPlaces, query) => {
     return myPlaces.filter( place => place.name.toLowerCase().includes(query.toLowerCase()) );
+  }
+
+  /* THIS IS WHERE YOU ARE
+    The currentMarkerIndex isn't being passed correctly and I don't know why */
+  clickListItem = (currentMarkerIndex) => {
+    console.log("clickListItem index: " + currentMarkerIndex);
+    this.setState({ currentMarkerIndex });
   }
 
   render() {
@@ -39,6 +47,7 @@ class App extends Component {
           <ListView 
             myPlaces={this.state.filtered}
             updateQuery={this.updateQuery}
+            clickListItem={this.clickListItem}
           />
         }
       
@@ -46,6 +55,7 @@ class App extends Component {
           center={this.state.center}
           zoom={this.state.zoom}
           myPlaces={this.state.filtered}
+          currentMarkerIndex={this.state.currentIndex}
         />
       </div>
     );
