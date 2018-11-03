@@ -12,11 +12,12 @@ class GoogleMap extends Component {
 		markerProps: [],
 		currentMarker: null,
 		currentMarkerProps: null,
+		currentMarkerIndex: -1,
 		infoWindowVisible: false
 	}
 
 	mapIsReady = (props, map) => {
-		this.setState({map});
+		this.setState({map, currentMarkerIndex: this.props.currentMarkerIndex});
 		this.updateMarkers(this.props.myPlaces);
 	}
 
@@ -26,10 +27,8 @@ class GoogleMap extends Component {
 			this.updateMarkers(this.props.myPlaces);
 		}
 
-		if(this.props.currentMarkerIndex !== prevProps.currentMarkerIndex) {
-			this.setState({ currentMarker: this.state.markers[this.props.currentMarkerIndex],
-							currentMarkerProps: this.state.markerProps[this.props.currentMarkerIndex]
-							});
+		if(this.props.currentMarkerIndex !== prevProps.currentMarkerIndex) {			
+			this.onMarkerClick(this.state.markerProps[this.props.currentMarkerIndex], this.state.markers[this.props.currentMarkerIndex], null);
 		}
 	}
 
@@ -69,8 +68,10 @@ class GoogleMap extends Component {
 	}
 
 	closeInfoWindow = () => {
+		this.setMarkerBounce(false);
 		this.setState({ currentMarker: null,
 						currentMarkerProps: null,
+						currentMarkerIndex: -1,
 						infoWindowVisible: false});
 	}
 
@@ -89,8 +90,23 @@ class GoogleMap extends Component {
 				
 				this.setState({ currentMarker: marker,
 						currentMarkerProps: newProps,
+						currentMarkerIndex: newProps.key,
 						infoWindowVisible: true});
+				this.setMarkerBounce(true);			
 			});	
+	}
+
+	setMarkerBounce(bouncing) {
+		const currentMarker = this.state.currentMarker;
+		// only make animation if a marker is currently selected
+		if(currentMarker) {			
+			if (bouncing) {
+				currentMarker.setAnimation(this.props.google.maps.Animation.BOUNCE);
+			}
+			else {
+				currentMarker.setAnimation(null);
+			}
+		}
 	}
 
 	getPlaceInfo(pos) {
@@ -171,7 +187,12 @@ class GoogleMap extends Component {
 							<div className="tips">
 								<p>{currentProps.fourSquareInfo.text}</p>
 								<p><a href={currentProps.fourSquareInfo.canonicalUrl}>See more info</a></p>
-								<p>Tips provided by FourSquare</p>
+								<p>Tips provided by Foursquare</p>
+							</div>
+						}
+						{currentProps && !currentProps.fourSquareInfo &&
+							<div className="tips">
+								<p>No Foursquare info available</p>
 							</div>
 						}
 					</div>

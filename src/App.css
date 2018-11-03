@@ -23,7 +23,7 @@ h1 {
 
 .list-view {
   height: 100%;
-  width: 300px;
+  width: 250px;
   position: absolute;
   background-color: white;
   z-index: 3;

@@ -28,8 +28,7 @@ class App extends Component {
 
   /* THIS IS WHERE YOU ARE
     The currentMarkerIndex isn't being passed correctly and I don't know why */
-  clickListItem = (currentMarkerIndex) => {
-    console.log("clickListItem index: " + currentMarkerIndex);
+  clickListItem = (e, currentMarkerIndex) => {
     this.setState({ currentMarkerIndex });
   }
 
@@ -55,7 +54,7 @@ class App extends Component {
           center={this.state.center}
           zoom={this.state.zoom}
           myPlaces={this.state.filtered}
-          currentMarkerIndex={this.state.currentIndex}
+          currentMarkerIndex={this.state.currentMarkerIndex}
         />
       </div>
     );
