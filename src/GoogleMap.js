@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Map, InfoWindow, GoogleApiWrapper} from 'google-maps-react';
 
+// necessary IDs to access the Foursquare API
 const CLIENT_ID = 'YQMUGUSOPVQ00HNH1O4TWU4PUQYF3WSASXHNUHO25KQDOFSC';
 const CLIENT_SECRET = 'DBMGJPUFAHPPDJC4KQKYCFT32ZHOZ4K2DVNOM3ZNIH4MH13P';
 const VERSION = '20180323';
@@ -12,12 +13,11 @@ class GoogleMap extends Component {
 		markerProps: [],
 		currentMarker: null,
 		currentMarkerProps: null,
-		currentMarkerIndex: -1,
 		infoWindowVisible: false
 	}
 
 	mapIsReady = (props, map) => {
-		this.setState({map, currentMarkerIndex: this.props.currentMarkerIndex});
+		this.setState({ map });
 		this.updateMarkers(this.props.myPlaces);
 	}
 
@@ -109,10 +109,12 @@ class GoogleMap extends Component {
 		}
 	}
 
+	// get information from foursquare of the place at the given position
 	getPlaceInfo(pos) {
 		let venueID = '';
 		let lat = pos.lat, lng = pos.lng;		
 
+		//this fetch's purpose is to find the venueID of the given position
 		return fetch(`https://api.foursquare.com/v2/venues/search?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}&ll=${lat},${lng}`)
 		    .then(data => data.json())
 		    .then(data => {
@@ -120,11 +122,12 @@ class GoogleMap extends Component {
 		    	return this.getPlaceTip(venueID);
 		    })
 		    .catch(function(e) {
-		        console.log("Four square error! " + e);
+		        console.log(e);
 		        return null;
 		    });	    
 	}
 
+	// fetches the tip data from the given venueID (found in getPlaceInfo)
 	getPlaceTip = (venueID) => {
 		return fetch(`https://api.foursquare.com/v2/venues/${venueID}/tips?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&v=${VERSION}`)
 		    .then(data => data.json())
@@ -132,46 +135,25 @@ class GoogleMap extends Component {
 		    	return data.response.tips.items[0];
 		    })
 		    .catch(function(e) {
-		    	console.log("Tips error! " + e);
+		    	console.log(e);
 		    	return null;
 		    });
 	}
 
-	getFourSquareHTML() {
-		let displayHTML = '';
-		let fourSquareInfo = this.state.currentMarkerProps.fourSquareInfo;
-		
-		// the current marker has four square info
-		if(fourSquareInfo) {
-			displayHTML = `<p>${fourSquareInfo.text}</p>
-						<p>Tips provided by FourSquare</p>`;
-		}
-
-		return displayHTML;
-	}
-
 	render() {
+		// created this variable just to clean up the code when displaying info
 		const currentProps = this.state.currentMarkerProps;
 
 		return (
 			<Map
-				role="application"
-				aria-label="map"
+				role='application'
+				aria-label='map'
 				onReady={this.mapIsReady}
 				google={this.props.google}
 				zoom={this.props.zoom}
 				initialCenter={this.props.center}
-				className="map">
+				className='map'>
 
-				{/*this.state.markers.map((place, index) => (			    
-				<Marker 
-					title={place.name + ' in ' + place.city}
-					name={place.name}
-					position={place.pos}
-					onClick={this.onMarkerClick}
-					key={index}
-				/>
-				))*/}
 				<InfoWindow 
 					onClose={this.closeInfoWindow}
 					marker={this.state.currentMarker}
@@ -184,14 +166,15 @@ class GoogleMap extends Component {
 						</h3>
 						{/*If there is no four square data available, then nothing is displayed */}
 						{currentProps && currentProps.fourSquareInfo &&
-							<div className="tips">
+							<div className='tips'>
 								<p>{currentProps.fourSquareInfo.text}</p>
 								<p><a href={currentProps.fourSquareInfo.canonicalUrl}>See more info</a></p>
 								<p>Tips provided by Foursquare</p>
 							</div>
 						}
+						{/*Display message if there is no fourSquareInfo */}
 						{currentProps && !currentProps.fourSquareInfo &&
-							<div className="tips">
+							<div className='tips'>
 								<p>No Foursquare info available</p>
 							</div>
 						}

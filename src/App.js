@@ -22,12 +22,13 @@ class App extends Component {
     this.setState({ filtered: this.filterPlaces(this.state.all, newValue) });
   }
 
+  // filter the list of places in ListView depending on the query entered
   filterPlaces = (myPlaces, query) => {
     return myPlaces.filter( place => place.name.toLowerCase().includes(query.toLowerCase()) );
   }
 
-  /* THIS IS WHERE YOU ARE
-    The currentMarkerIndex isn't being passed correctly and I don't know why */
+  // set the currentMarkerIndex when a place in the ListView is selected, then the map
+  // recieves the updated prop and selects the corresponding marker
   clickListItem = (e, currentMarkerIndex) => {
     this.setState({ currentMarkerIndex });
   }
@@ -36,8 +37,8 @@ class App extends Component {
     return (
       <div>
         <header>
-          <button className="menu" onClick={this.toggleList}>
-            <span className="entypo-menu"></span>
+          <button className='menu' onClick={this.toggleList} aria-label='toggle places list'>
+            <span className='entypo-menu'></span>
           </button>
           <h1>Sarah's Places</h1>
         </header>       
