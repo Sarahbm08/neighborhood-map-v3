@@ -1,5 +1,5 @@
 @import url(http://weloveiconfonts.com/api/?family=entypo);
-/* entypo */
+/* entypo font from weloveiconfonts.com */
 [class*="entypo-"]:before {
   font-family: 'entypo', sans-serif;
   font-size: 40px;
@@ -28,14 +28,6 @@ h1 {
   background-color: white;
   z-index: 3;
 }
-
-/*
-@media screen (min-width: 600px) {
-  .list-view {
-    position: relative;
-    transform: translate(0, 0);
-  }
-}*/
 
 .list-view ul {
   list-style: none;
