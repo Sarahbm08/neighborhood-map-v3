@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Map, InfoWindow, GoogleApiWrapper} from 'google-maps-react';
+import GoogleMapError from './GoogleMapError'
 
 // necessary IDs to access the Foursquare API
 const CLIENT_ID = 'YQMUGUSOPVQ00HNH1O4TWU4PUQYF3WSASXHNUHO25KQDOFSC';
@@ -13,7 +14,14 @@ class GoogleMap extends Component {
 		markerProps: [],
 		currentMarker: null,
 		currentMarkerProps: null,
-		infoWindowVisible: false
+		infoWindowVisible: false,
+		loadError: false
+	}
+
+	componentDidMount() {
+		window.gm_authFailure = () => {
+			this.setState({ loadError: true });
+		}
 	}
 
 	mapIsReady = (props, map) => {
@@ -145,46 +153,49 @@ class GoogleMap extends Component {
 		const currentProps = this.state.currentMarkerProps;
 
 		return (
-			<Map
-				role='application'
-				aria-label='map'
-				onReady={this.mapIsReady}
-				google={this.props.google}
-				zoom={this.props.zoom}
-				initialCenter={this.props.center}
-				className='map'>
+			<div>
+				{this.state.loadError && <GoogleMapError/>}
+				{!this.state.loadError && 
+					<Map
+					role='application'
+					aria-label='map'
+					onReady={this.mapIsReady}
+					google={this.props.google}
+					zoom={this.props.zoom}
+					initialCenter={this.props.center}
+					className='map'
+					>
 
-				<InfoWindow 
-					onClose={this.closeInfoWindow}
-					marker={this.state.currentMarker}
-					visible={this.state.infoWindowVisible}>
+						<InfoWindow 
+							onClose={this.closeInfoWindow}
+							marker={this.state.currentMarker}
+							visible={this.state.infoWindowVisible}>
 
-					<div>
-						<h3>
-							{currentProps && 
-							currentProps.name}
-						</h3>
-						{/*If there is no four square data available, then nothing is displayed */}
-						{currentProps && currentProps.fourSquareInfo &&
-							<div className='tips'>
-								<p>{currentProps.fourSquareInfo.text}</p>
-								<p><a href={currentProps.fourSquareInfo.canonicalUrl}>See more info</a></p>
-								<p>Tips provided by Foursquare</p>
+							<div>
+								<h3 tabIndex='2'>
+									{currentProps && currentProps.name}
+								</h3>
+								{/*If there is no four square data available, then nothing is displayed */}
+								{currentProps && currentProps.fourSquareInfo &&
+									<div className='tips' tabIndex='3'>
+										<p>{currentProps.fourSquareInfo.text}</p>
+										<p><a href={currentProps.fourSquareInfo.canonicalUrl}>See more info</a></p>
+										<p>Tips provided by Foursquare</p>
+									</div>
+								}
+								{/*Display message if there is no fourSquareInfo */}
+								{currentProps && !currentProps.fourSquareInfo &&
+									<div className='tips' tabIndex='3'>
+										<p>No Foursquare info available</p>
+									</div>
+								}
 							</div>
-						}
-						{/*Display message if there is no fourSquareInfo */}
-						{currentProps && !currentProps.fourSquareInfo &&
-							<div className='tips'>
-								<p>No Foursquare info available</p>
-							</div>
-						}
-					</div>
-
-				</InfoWindow>
-
-			</Map>
+						</InfoWindow>
+					</Map>
+				}
+			</div>
 		);
 	}
 }
 
-export default GoogleApiWrapper({apiKey: 'AIzaSyD5R-Qq9SoZ3Y4RmxD2xB7XDhaag-nKZ9s'})(GoogleMap)
+export default GoogleApiWrapper({apiKey: 'AIzaSyD5R-Qq9SoZ3Y4RmxD2xB7XDhaag-nKZ9s' })(GoogleMap)

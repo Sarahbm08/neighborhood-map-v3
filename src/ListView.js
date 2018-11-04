@@ -13,9 +13,10 @@ class ListView extends Component {
 					placeholder='Filter places below'
 					name='filter'
 					onChange={e => this.props.updateQuery(e.target.value)}
+					tabIndex='2'
 				/>
 
-				<ul>
+				<ul	>
 					{this.props.myPlaces && 
 					this.props.myPlaces.map( (place, index) => (
 						<li key={index}>

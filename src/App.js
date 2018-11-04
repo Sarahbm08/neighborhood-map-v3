@@ -37,7 +37,7 @@ class App extends Component {
     return (
       <div>
         <header>
-          <button className='menu' onClick={this.toggleList} aria-label='toggle places list'>
+          <button className='menu' onClick={this.toggleList} tabIndex='1' aria-label='toggle places list'>
             <span className='entypo-menu'></span>
           </button>
           <h1>Sarah's Places</h1>
